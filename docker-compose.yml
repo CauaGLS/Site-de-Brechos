@@ -1,0 +1,22 @@
+name: aodesapego
+
+services:
+   db:
+     image: postgres
+     ports:
+       - "5432:5432"
+     env_file:
+       - ./.env
+     volumes:
+       - ./docker/db:/var/lib/postgresql/data
+     networks:
+       - aodesapego
+     healthcheck:
+       test: ["CMD-SHELL", "pg_isready -U postgres"]
+       interval: 2s
+       timeout: 2s
+       retries: 10
+
+
+networks:
+  aodesapego:
