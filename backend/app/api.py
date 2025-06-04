@@ -9,7 +9,7 @@ from .schemas import (
 )
 
 
-router = Router()
+router = Router(tags=["Brecho"])
 
 # --- Expositores ---
 

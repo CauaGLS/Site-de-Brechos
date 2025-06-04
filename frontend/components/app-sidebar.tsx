@@ -35,12 +35,12 @@ const links = [
   },
   {
     title: "Locais",
-    url: "/",
+    url: "/locais",
     icon: MapPin,
   },
   {
     title: "Ingressos",
-    url: "/",
+    url: "/igressos",
     icon: TicketIcon,
   },
 ];

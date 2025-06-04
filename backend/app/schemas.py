@@ -4,6 +4,7 @@ from core.schemas import UserSchema
 
 
 class ExpositorSchema(ModelSchema):
+    id: int
     created_by: UserSchema
 
     class Meta:

@@ -5,7 +5,7 @@ import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
 import type { AppApiListarExpositoresResponse, AppApiCriarExpositorData, AppApiCriarExpositorResponse, AppApiObterExpositorData, AppApiObterExpositorResponse, AppApiAtualizarExpositorData, AppApiAtualizarExpositorResponse, AppApiDeletarExpositorData, AppApiDeletarExpositorResponse, AppApiListarPecasResponse, AppApiCriarPecaData, AppApiCriarPecaResponse, AppApiObterPecaData, AppApiObterPecaResponse, AppApiAtualizarPecaData, AppApiAtualizarPecaResponse, AppApiDeletarPecaData, AppApiDeletarPecaResponse } from './types.gen';
 
-export class DefaultService {
+export class BrechoService {
     /**
      * Listar Expositores
      * @returns ExpositorSchema OK
