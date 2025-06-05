@@ -1,6 +1,7 @@
-from ninja import Schema, ModelSchema
-from .models import Expositor, Peca
 from core.schemas import UserSchema
+from ninja import Schema, ModelSchema
+
+from .models import Expositor, Peca
 
 
 class ExpositorSchema(ModelSchema):
@@ -20,6 +21,7 @@ class CreateExpositorSchema(Schema):
 
 
 class PecaSchema(ModelSchema):
+    id: int
     created_by: UserSchema
 
     class Meta:

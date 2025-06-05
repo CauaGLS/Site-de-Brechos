@@ -5,8 +5,8 @@ from ninja.security import HttpBearer
 
 class AuthBearer(HttpBearer):
     def authenticate(self, request, token):
-        print(f"Authenticating token: {token}")
         session = Session.objects.select_related("user").get(token=token)
+
         if not session:
             return None
         

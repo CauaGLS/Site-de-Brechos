@@ -22,15 +22,36 @@ export type ExpositorSchema = {
     updated_at: string;
 };
 
+export type ExpositorSchemaPatch = {
+    id?: (number | null);
+    created_by?: (UserSchema | null);
+    nome?: (string | null);
+    descricao?: (string | null);
+    rede_social?: (string | null);
+    created_at?: (string | null);
+    updated_at?: (string | null);
+};
+
 export type PecaSchema = {
     created_by: UserSchema;
     id?: (number | null);
     nome: string;
     preco: (number | string);
     descricao?: (string | null);
-    expositor_id: number;
+    expositor: number;
     created_at: string;
     updated_at: string;
+};
+
+export type PecaSchemaPatch = {
+    created_by?: (UserSchema | null);
+    id?: (number | null);
+    nome?: (string | null);
+    preco?: (number | string | null);
+    descricao?: (string | null);
+    expositor?: (number | null);
+    created_at?: (string | null);
+    updated_at?: (string | null);
 };
 
 export type UserSchema = {
@@ -56,7 +77,7 @@ export type AppApiObterExpositorResponse = (ExpositorSchema);
 
 export type AppApiAtualizarExpositorData = {
     expositorId: number;
-    requestBody: ExpositorSchema;
+    requestBody: ExpositorSchemaPatch;
 };
 
 export type AppApiAtualizarExpositorResponse = (ExpositorSchema);
@@ -83,7 +104,7 @@ export type AppApiObterPecaResponse = (PecaSchema);
 
 export type AppApiAtualizarPecaData = {
     pecaId: number;
-    requestBody: PecaSchema;
+    requestBody: PecaSchemaPatch;
 };
 
 export type AppApiAtualizarPecaResponse = (PecaSchema);

@@ -1,17 +1,12 @@
+import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset } from "@/components/ui/sidebar";
 
-import { AppSidebar } from "@/components/app-sidebar";
-
-export default function MainLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <AppSidebar />
-      <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+      <SidebarInset className="flex flex-col gap-2 overflow-y-auto p-2 md:gap-4 md:p-4">
+        {children}
       </SidebarInset>
     </>
   );

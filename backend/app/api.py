@@ -1,4 +1,4 @@
-from ninja import Router
+from ninja import PatchDict, Router
 from .models import Expositor, Peca
 from django.shortcuts import get_object_or_404
 from .schemas import (
@@ -29,10 +29,11 @@ def criar_expositor(request, expositor: CreateExpositorSchema):
 
 
 @router.put("/expositores/{expositor_id}", response=ExpositorSchema)
-def atualizar_expositor(request, expositor_id: int, expositor_data: ExpositorSchema):
+def atualizar_expositor(request, expositor_id: int, payload: PatchDict[ExpositorSchema]):
     expositor = get_object_or_404(Expositor, id=expositor_id)
-    expositor.nome = expositor_data.nome
-    expositor.descricao = expositor_data.descricao
+
+    for attr, value in payload.items():
+        setattr(expositor, attr, value)
     expositor.save()
     return expositor
 
@@ -63,13 +64,14 @@ def criar_peca(request, peca: CreatePecaSchema):
 
 
 @router.put("/pecas/{peca_id}", response=PecaSchema)
-def atualizar_peca(request, peca_id: int, peca_data: PecaSchema):
+def atualizar_peca(request, peca_id: int, payload: PatchDict[PecaSchema]):
     peca = get_object_or_404(Peca, id=peca_id)
-    peca.nome = peca_data.nome
-    peca.descricao = peca_data.descricao
-    peca.preco = peca_data.preco
+
+    for attr, value in payload.items():
+        setattr(peca, attr, value)
     peca.save()
     return peca
+
 
 
 @router.delete("/pecas/{peca_id}", response={204: None})
