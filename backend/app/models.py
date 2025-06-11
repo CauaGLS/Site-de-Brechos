@@ -90,8 +90,12 @@ class Peca(models.Model):
     expositor = models.ForeignKey(Expositor, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    reservada = models.BooleanField(default=False)
 
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    expositor = models.ForeignKey(
+        Expositor, on_delete=models.CASCADE, related_name="pecas", db_column="expositor_id"
+    )
 
     def __str__(self):
         return self.nome
@@ -101,4 +105,3 @@ class Peca(models.Model):
         verbose_name = "peca"
         verbose_name_plural = "pecas"
         ordering = ["created_at"]
-

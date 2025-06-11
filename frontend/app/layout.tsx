@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" data-lt-installed="true" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} flex h-svh flex-col overflow-hidden antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} flex h-screen flex-col antialiased`}
       >
         <Providers>{children}</Providers>
       </body>

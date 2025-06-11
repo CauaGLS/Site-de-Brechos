@@ -9,7 +9,9 @@ export type CreateExpositorSchema = {
 export type CreatePecaSchema = {
     nome: string;
     preco: number;
-    descricao: string;
+    descricao?: string;
+    reservada?: boolean;
+    expositor_id: number;
 };
 
 export type ExpositorSchema = {
@@ -33,25 +35,24 @@ export type ExpositorSchemaPatch = {
 };
 
 export type PecaSchema = {
-    created_by: UserSchema;
-    id?: (number | null);
+    id: number;
     nome: string;
-    preco: (number | string);
-    descricao?: (string | null);
-    expositor: number;
+    preco: number;
+    descricao?: string;
+    reservada?: boolean;
+    created_by: UserSchema;
+    expositor_id: number;
     created_at: string;
     updated_at: string;
+    expositor: number;
 };
 
-export type PecaSchemaPatch = {
-    created_by?: (UserSchema | null);
-    id?: (number | null);
-    nome?: (string | null);
-    preco?: (number | string | null);
-    descricao?: (string | null);
-    expositor?: (number | null);
-    created_at?: (string | null);
-    updated_at?: (string | null);
+export type UpdatePecaSchema = {
+    nome?: string;
+    preco?: number;
+    descricao?: string;
+    reservada?: boolean;
+    expositor_id?: number;
 };
 
 export type UserSchema = {
@@ -88,6 +89,10 @@ export type AppApiDeletarExpositorData = {
 
 export type AppApiDeletarExpositorResponse = (void);
 
+export type AppApiListarPecasData = {
+    expositorId?: number;
+};
+
 export type AppApiListarPecasResponse = (Array<PecaSchema>);
 
 export type AppApiCriarPecaData = {
@@ -104,7 +109,7 @@ export type AppApiObterPecaResponse = (PecaSchema);
 
 export type AppApiAtualizarPecaData = {
     pecaId: number;
-    requestBody: PecaSchemaPatch;
+    requestBody: UpdatePecaSchema;
 };
 
 export type AppApiAtualizarPecaResponse = (PecaSchema);

@@ -22,6 +22,12 @@ class CreateExpositorSchema(Schema):
 
 class PecaSchema(ModelSchema):
     id: int
+    nome: str
+    preco: float
+    descricao: str = ""
+    reservada: bool = False
+    created_by: UserSchema
+    expositor_id: int
     created_by: UserSchema
 
     class Meta:
@@ -33,5 +39,14 @@ class PecaSchema(ModelSchema):
 class CreatePecaSchema(Schema):
     nome: str
     preco: float
-    descricao: str
+    descricao: str = ""
+    reservada: bool = False
+    expositor_id: int
 
+
+class UpdatePecaSchema(Schema):
+    nome: str = None  # Opcional na atualização
+    preco: float = None
+    descricao: str = None
+    reservada: bool = None
+    expositor_id: int = None

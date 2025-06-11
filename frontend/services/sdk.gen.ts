@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { AppApiListarExpositoresResponse, AppApiCriarExpositorData, AppApiCriarExpositorResponse, AppApiObterExpositorData, AppApiObterExpositorResponse, AppApiAtualizarExpositorData, AppApiAtualizarExpositorResponse, AppApiDeletarExpositorData, AppApiDeletarExpositorResponse, AppApiListarPecasResponse, AppApiCriarPecaData, AppApiCriarPecaResponse, AppApiObterPecaData, AppApiObterPecaResponse, AppApiAtualizarPecaData, AppApiAtualizarPecaResponse, AppApiDeletarPecaData, AppApiDeletarPecaResponse } from './types.gen';
+import type { AppApiListarExpositoresResponse, AppApiCriarExpositorData, AppApiCriarExpositorResponse, AppApiObterExpositorData, AppApiObterExpositorResponse, AppApiAtualizarExpositorData, AppApiAtualizarExpositorResponse, AppApiDeletarExpositorData, AppApiDeletarExpositorResponse, AppApiListarPecasData, AppApiListarPecasResponse, AppApiCriarPecaData, AppApiCriarPecaResponse, AppApiObterPecaData, AppApiObterPecaResponse, AppApiAtualizarPecaData, AppApiAtualizarPecaResponse, AppApiDeletarPecaData, AppApiDeletarPecaResponse } from './types.gen';
 
 export class BrechoService {
     /**
@@ -90,13 +90,18 @@ export class BrechoService {
     
     /**
      * Listar Pecas
+     * @param data The data for the request.
+     * @param data.expositorId
      * @returns PecaSchema OK
      * @throws ApiError
      */
-    public static appApiListarPecas(): CancelablePromise<AppApiListarPecasResponse> {
+    public static appApiListarPecas(data: AppApiListarPecasData = {}): CancelablePromise<AppApiListarPecasResponse> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/pecas'
+            url: '/api/pecas',
+            query: {
+                expositor_id: data.expositorId
+            }
         });
     }
     

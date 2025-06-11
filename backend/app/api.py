@@ -1,11 +1,13 @@
 from ninja import PatchDict, Router
+from django.http import JsonResponse
 from .models import Expositor, Peca
 from django.shortcuts import get_object_or_404
 from .schemas import (
     ExpositorSchema,
     CreateExpositorSchema,
     PecaSchema,
-    CreatePecaSchema
+    CreatePecaSchema,
+    UpdatePecaSchema,
 )
 
 
@@ -49,8 +51,11 @@ def deletar_expositor(request, expositor_id: int):
 # --- Peças ---
 
 @router.get("/pecas", response=list[PecaSchema])
-def listar_pecas(request):
-    return Peca.objects.select_related("created_by").all()
+def listar_pecas(request, expositor_id: int = None):
+    query = Peca.objects.select_related("created_by", "expositor")
+    if expositor_id:
+        query = query.filter(expositor_id=expositor_id)
+    return query.all()
 
 
 @router.get("/pecas/{peca_id}", response=PecaSchema)
@@ -60,18 +65,43 @@ def obter_peca(request, peca_id: int):
 
 @router.post("/pecas", response=PecaSchema)
 def criar_peca(request, peca: CreatePecaSchema):
-    return Peca.objects.create(**peca.dict(), created_by=request.auth)
+    try:
+        expositor = Expositor.objects.get(id=peca.expositor_id)
+        
+        nova_peca = Peca.objects.create(
+            nome=peca.nome,
+            preco=peca.preco,
+            descricao=peca.descricao,
+            reservada=peca.reservada,
+            expositor=expositor,
+            created_by=request.auth
+        )
+        return nova_peca
+    except Expositor.DoesNotExist:
+        return JsonResponse({"error": "Expositor não encontrado"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": f"Erro ao criar peça: {str(e)}"}, status=500)
 
 
 @router.put("/pecas/{peca_id}", response=PecaSchema)
-def atualizar_peca(request, peca_id: int, payload: PatchDict[PecaSchema]):
+def atualizar_peca(request, peca_id: int, payload: UpdatePecaSchema):
     peca = get_object_or_404(Peca, id=peca_id)
-
-    for attr, value in payload.items():
-        setattr(peca, attr, value)
+    
+    update_data = payload.dict(exclude_unset=True)
+    
+    # Atualiza apenas campos que foram enviados
+    for attr, value in update_data.items():
+        if attr == 'reservada':
+            peca.reservada = value
+        elif attr == 'nome':
+            peca.nome = value
+        elif attr == 'preco':
+            peca.preco = value
+        elif attr == 'descricao':
+            peca.descricao = value
+    
     peca.save()
     return peca
-
 
 
 @router.delete("/pecas/{peca_id}", response={204: None})
