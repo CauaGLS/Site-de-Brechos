@@ -11,6 +11,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False)
     image = models.URLField(null=True, blank=True)
+    admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

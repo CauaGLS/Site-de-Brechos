@@ -118,7 +118,11 @@ export const PecaCard: FC<PecaCardProps> = ({ peca }) => {
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              deletePeca.mutate();
+              try {
+                deletePeca.mutate();
+              } catch (error) {
+                alert("Você não tem permissão para esta ação")
+              }
             }}
             disabled={toggleReserva.isPending || deletePeca.isPending}
           >
@@ -134,6 +138,7 @@ export const PecaCard: FC<PecaCardProps> = ({ peca }) => {
       {/* Modal de edição */}
       {editMode && (
         <CriarPeca 
+          //@ts-ignore
           expositorId={pecaConvertida.expositor_id.toString()}
           pecaExistente={pecaConvertida}
           onClose={() => setEditMode(false)}

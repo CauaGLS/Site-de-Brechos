@@ -1,46 +1,41 @@
 "use client";
 
 import { BrechoService, PecaSchema } from "@/services";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query"; // Adicionado useQueryClient
 import { useRouter, useParams } from "next/navigation";
 import { CriarPeca } from "@/components/create-peca";
-import { Peca } from "@/types/pecas";
+import { CriarExpositor } from "@/components/create-expositores";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { useEffect, useState } from "react";
 import { PecaCard } from "@/components/peca-card";
 
-
 export default function ExpositorPage() {
   const router = useRouter();
   const params = useParams();
+  const queryClient = useQueryClient(); // Adicionado
   
-  // Estado para o ID do expositor
   const [expositorId, setExpositorId] = useState<number>(0);
 
-  // Efeito para atualizar o ID quando params mudar
   useEffect(() => {
     if (params?.id) {
       setExpositorId(Number(params.id));
     }
   }, [params]);
 
-  // Busca o expositor
   const { data: expositor } = useQuery({
     queryKey: ["expositor", expositorId],
     queryFn: () => BrechoService.appApiObterExpositor({ expositorId }),
-    enabled: expositorId > 0 // Só executa quando temos um ID válido
+    enabled: expositorId > 0
   });
 
-  // Busca as peças do expositor
   const { data: pecas } = useQuery({
     queryKey: ["pecas", expositorId],
     queryFn: () => BrechoService.appApiListarPecas({ expositorId }),
     enabled: expositorId > 0
   });
 
-  // Se não tivermos um ID ainda, mostra loading
   if (!expositorId) {
     return <div>Carregando...</div>;
   }
@@ -62,7 +57,7 @@ export default function ExpositorPage() {
 
         <main className="flex-1 mt-4 overflow-auto">
           {/* Banner do expositor */}
-          <div className="mb-8 rounded-lg border p-6 shadow-sm">
+          <div className="mb-8 rounded-lg border p-6 shadow-sm relative">
             <h1 className="text-2xl font-bold">{expositor?.nome}</h1>
             {expositor?.descricao && (
               <p className="mt-2 text-muted-foreground">{expositor.descricao}</p>
@@ -76,6 +71,24 @@ export default function ExpositorPage() {
               >
                 Visitar rede social
               </a>
+            )}
+            
+            {/* Botões de editar/excluir */}
+            {expositor && (
+              <CriarExpositor
+                expositorExistente={{
+                  id: expositor.id,
+                  nome: expositor.nome,
+                  descricao: expositor.descricao || undefined,
+                  rede_social: expositor.rede_social || undefined,
+                }}
+                onSuccess={() => {
+                  queryClient.invalidateQueries({ queryKey: ["expositor", expositorId] });
+                }}
+                onDelete={() => {
+                  router.push("/");
+                }}
+              />
             )}
           </div>
 

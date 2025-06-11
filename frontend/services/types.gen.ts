@@ -16,20 +16,20 @@ export type CreatePecaSchema = {
 
 export type ExpositorSchema = {
     id: number;
-    created_by: UserSchema;
     nome: string;
-    descricao?: (string | null);
-    rede_social?: (string | null);
+    descricao?: string;
+    rede_social?: string;
+    created_by: UserSchema;
     created_at: string;
     updated_at: string;
 };
 
 export type ExpositorSchemaPatch = {
     id?: (number | null);
-    created_by?: (UserSchema | null);
     nome?: (string | null);
     descricao?: (string | null);
     rede_social?: (string | null);
+    created_by?: (UserSchema | null);
     created_at?: (string | null);
     updated_at?: (string | null);
 };

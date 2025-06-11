@@ -6,6 +6,9 @@ from .models import Expositor, Peca
 
 class ExpositorSchema(ModelSchema):
     id: int
+    nome: str
+    descricao: str = ""
+    rede_social: str = ""
     created_by: UserSchema
 
     class Meta:

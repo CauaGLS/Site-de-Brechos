@@ -90,7 +90,11 @@ export function CriarPeca({ expositorId, pecaExistente, onClose }: CriarPecaProp
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    mutation.mutate(data);
+    try{
+      mutation.mutate(data);
+    } catch (error) {
+      alert("Você não tem permissão para esta ação")
+    }
   });
 
   return (
