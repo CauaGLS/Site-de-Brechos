@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { AppApiListarExpositoresResponse, AppApiCriarExpositorData, AppApiCriarExpositorResponse, AppApiObterExpositorData, AppApiObterExpositorResponse, AppApiAtualizarExpositorData, AppApiAtualizarExpositorResponse, AppApiDeletarExpositorData, AppApiDeletarExpositorResponse, AppApiListarPecasData, AppApiListarPecasResponse, AppApiCriarPecaData, AppApiCriarPecaResponse, AppApiObterPecaData, AppApiObterPecaResponse, AppApiAtualizarPecaData, AppApiAtualizarPecaResponse, AppApiDeletarPecaData, AppApiDeletarPecaResponse } from './types.gen';
+import type { AppApiListarExpositoresResponse, AppApiCriarExpositorData, AppApiCriarExpositorResponse, AppApiObterExpositorData, AppApiObterExpositorResponse, AppApiAtualizarExpositorData, AppApiAtualizarExpositorResponse, AppApiDeletarExpositorData, AppApiDeletarExpositorResponse, AppApiListarPecasData, AppApiListarPecasResponse, AppApiCriarPecaData, AppApiCriarPecaResponse, AppApiObterPecaData, AppApiObterPecaResponse, AppApiAtualizarPecaData, AppApiAtualizarPecaResponse, AppApiDeletarPecaData, AppApiDeletarPecaResponse, AppApiCriarIngressoData, AppApiCriarIngressoResponse, AppApiGerarQrcodeData, AppApiGerarQrcodeResponse, AppApiValidarIngressoData, AppApiValidarIngressoResponse, AppApiObterIngressoData, AppApiObterIngressoResponse } from './types.gen';
 
 export class BrechoService {
     /**
@@ -171,6 +171,79 @@ export class BrechoService {
             url: '/api/pecas/{peca_id}',
             path: {
                 peca_id: data.pecaId
+            }
+        });
+    }
+    
+    /**
+     * Criar Ingresso
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns IngressoSchema OK
+     * @throws ApiError
+     */
+    public static appApiCriarIngresso(data: AppApiCriarIngressoData): CancelablePromise<AppApiCriarIngressoResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/ingressos',
+            body: data.requestBody,
+            mediaType: 'application/json'
+        });
+    }
+    
+    /**
+     * Gerar Qrcode
+     * @param data The data for the request.
+     * @param data.ingressoId
+     * @returns string OK
+     * @throws ApiError
+     */
+    public static appApiGerarQrcode(data: AppApiGerarQrcodeData): CancelablePromise<AppApiGerarQrcodeResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/ingressos/{ingresso_id}/qrcode',
+            path: {
+                ingresso_id: data.ingressoId
+            },
+            errors: {
+                404: 'Not Found'
+            }
+        });
+    }
+    
+    /**
+     * Validar Ingresso
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns IngressoSchema OK
+     * @throws ApiError
+     */
+    public static appApiValidarIngresso(data: AppApiValidarIngressoData): CancelablePromise<AppApiValidarIngressoResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/ingressos/validar',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                400: 'Bad Request',
+                404: 'Not Found'
+            }
+        });
+    }
+    
+    /**
+     * Obter Ingresso
+     * @param data The data for the request.
+     * @param data.ingressoId
+     * @returns IngressoSchema OK
+     * @throws ApiError
+     */
+    public static appApiObterIngresso(data: AppApiObterIngressoData): CancelablePromise<AppApiObterIngressoResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/ingressos/{ingresso_id}',
+            path: {
+                ingresso_id: data.ingressoId
             }
         });
     }

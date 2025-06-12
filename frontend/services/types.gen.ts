@@ -6,6 +6,12 @@ export type CreateExpositorSchema = {
     rede_social: string;
 };
 
+export type CreateIngressoSchema = {
+    nome: string;
+    email: string;
+    cpf: string;
+};
+
 export type CreatePecaSchema = {
     nome: string;
     preco: number;
@@ -34,6 +40,17 @@ export type ExpositorSchemaPatch = {
     updated_at?: (string | null);
 };
 
+export type IngressoSchema = {
+    id: string;
+    nome: string;
+    email: string;
+    cpf: string;
+    data_compra: string;
+    utilizado: boolean;
+    data_utilizacao?: (string | null);
+    created_by?: (string | null);
+};
+
 export type PecaSchema = {
     id: number;
     nome: string;
@@ -60,6 +77,11 @@ export type UserSchema = {
     name?: (string | null);
     email: string;
     image?: (string | null);
+};
+
+export type ValidateIngressoSchema = {
+    ingresso_id: string;
+    cpf: string;
 };
 
 export type AppApiListarExpositoresResponse = (Array<ExpositorSchema>);
@@ -119,3 +141,27 @@ export type AppApiDeletarPecaData = {
 };
 
 export type AppApiDeletarPecaResponse = (void);
+
+export type AppApiCriarIngressoData = {
+    requestBody: CreateIngressoSchema;
+};
+
+export type AppApiCriarIngressoResponse = (IngressoSchema);
+
+export type AppApiGerarQrcodeData = {
+    ingressoId: string;
+};
+
+export type AppApiGerarQrcodeResponse = (string);
+
+export type AppApiValidarIngressoData = {
+    requestBody: ValidateIngressoSchema;
+};
+
+export type AppApiValidarIngressoResponse = (IngressoSchema);
+
+export type AppApiObterIngressoData = {
+    ingressoId: string;
+};
+
+export type AppApiObterIngressoResponse = (IngressoSchema);

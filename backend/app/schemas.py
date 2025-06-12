@@ -1,7 +1,9 @@
 from core.schemas import UserSchema
 from ninja import Schema, ModelSchema
+from datetime import datetime
+from typing import Optional
 
-from .models import Expositor, Peca
+from .models import Expositor, Peca, Ingresso
 
 
 class ExpositorSchema(ModelSchema):
@@ -53,3 +55,30 @@ class UpdatePecaSchema(Schema):
     descricao: str = None
     reservada: bool = None
     expositor_id: int = None
+
+
+class IngressoSchema(ModelSchema):
+    id: str  # Forçando conversão para string
+    nome: str
+    email: str
+    cpf: str
+    data_compra: datetime
+    utilizado: bool
+    data_utilizacao: Optional[datetime] = None
+
+    class Meta:
+        model = Ingresso
+        fields = "__all__"
+
+    @staticmethod
+    def resolve_id(obj):
+        return str(obj.id)  # Converte UUID para string
+
+class CreateIngressoSchema(Schema):
+    nome: str
+    email: str
+    cpf: str
+
+class ValidateIngressoSchema(Schema):
+    ingresso_id: str
+    cpf: str  # Para validação adicional

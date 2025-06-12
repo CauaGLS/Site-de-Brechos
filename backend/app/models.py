@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
+import uuid
+from django.core.validators import MinLengthValidator
 
 
 class User(AbstractBaseUser):
@@ -106,3 +108,23 @@ class Peca(models.Model):
         verbose_name = "peca"
         verbose_name_plural = "pecas"
         ordering = ["created_at"]
+
+
+class Ingresso(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    nome = models.CharField(max_length=255)
+    email = models.EmailField()
+    cpf = models.CharField(max_length=14, validators=[MinLengthValidator(11)])
+    data_compra = models.DateTimeField(auto_now_add=True)
+    utilizado = models.BooleanField(default=False)
+    data_utilizacao = models.DateTimeField(null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"Ingresso de {self.nome} ({self.email})"
+
+    class Meta:
+        db_table = "ingressos"
+        verbose_name = "ingresso"
+        verbose_name_plural = "ingressos"
+        ordering = ["-data_compra"]

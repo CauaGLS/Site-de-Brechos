@@ -1,6 +1,12 @@
 from ninja import PatchDict, Router
 from django.http import JsonResponse
-from .models import Expositor, Peca
+from django.http import HttpRequest
+from django.views.decorators.csrf import csrf_exempt
+from qrcode import make as make_qr
+from io import BytesIO
+import base64
+from datetime import datetime
+from .models import Expositor, Peca, Ingresso
 from django.shortcuts import get_object_or_404
 from .schemas import (
     ExpositorSchema,
@@ -8,6 +14,9 @@ from .schemas import (
     PecaSchema,
     CreatePecaSchema,
     UpdatePecaSchema,
+    IngressoSchema,
+    CreateIngressoSchema,
+    ValidateIngressoSchema
 )
 from django.core.exceptions import PermissionDenied
 
@@ -135,3 +144,56 @@ def deletar_peca(request, peca_id: int):
     
     peca.delete()
     return 204, None
+
+
+# --- Ingressos ---
+
+@router.post("/ingressos", response=IngressoSchema)
+def criar_ingresso(request: HttpRequest, payload: CreateIngressoSchema):
+
+    ingresso = Ingresso.objects.create(
+        nome=payload.nome,
+        email=payload.email,
+        cpf=payload.cpf,
+        created_by=request.auth if hasattr(request, 'auth') else None
+    )
+    
+    return ingresso
+
+@router.get("/ingressos/{ingresso_id}/qrcode", response={200: str, 404: None})
+def gerar_qrcode(request, ingresso_id: str):
+    ingresso = get_object_or_404(Ingresso, id=ingresso_id)
+    
+    # Criar dados para o QR Code (inclui ID e CPF para validação)
+    qr_data = f"INGRESSO_ID:{ingresso.id}|CPF:{ingresso.cpf}"
+    
+    # Gerar QR Code
+    img = make_qr(qr_data)
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    img_str = base64.b64encode(buffer.getvalue()).decode()
+    
+    return 200, f"data:image/png;base64,{img_str}"
+
+
+@router.post("/ingressos/validar", response={200: IngressoSchema, 400: dict, 404: None})
+@csrf_exempt
+def validar_ingresso(request, payload: ValidateIngressoSchema):
+    try:
+        ingresso = Ingresso.objects.get(id=payload.ingresso_id, cpf=payload.cpf)
+    except Ingresso.DoesNotExist:
+        return 404, None
+    
+    if ingresso.utilizado:
+        return 400, {"error": "Este ingresso já foi utilizado"}
+    
+    # Marcar como utilizado
+    ingresso.utilizado = True
+    ingresso.data_utilizacao = datetime.now()
+    ingresso.save()
+    
+    return 200, ingresso
+
+@router.get("/ingressos/{ingresso_id}", response=IngressoSchema)
+def obter_ingresso(request, ingresso_id: str):
+    return get_object_or_404(Ingresso, id=ingresso_id)

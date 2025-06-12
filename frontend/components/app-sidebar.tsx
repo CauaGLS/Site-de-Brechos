@@ -40,7 +40,7 @@ const links = [
   },
   {
     title: "Ingressos",
-    url: "/igressos",
+    url: "/ingressos",
     icon: TicketIcon,
   },
 ];
