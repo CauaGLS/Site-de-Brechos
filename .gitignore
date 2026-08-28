@@ -25,3 +25,6 @@ docker/
 
 copiar-env.ps1
 .env
+
+# Django collectstatic output (Whitenoise) and build artifacts
+backend/staticfiles/
