@@ -24,8 +24,8 @@ export const PecaCard: FC<PecaCardProps> = ({ peca }) => {
     preco: peca.preco,
     descricao: peca.descricao || undefined,
     reservada: peca.reservada ?? false, // Garante boolean
-    //@ts-ignore
-    expositor_id: peca.expositor_id ?? Number(peca.expositor?.id), 
+    // @ts-expect-error expositor_id não está tipado em PecaSchema quando vem aninhado em expositor
+    expositor_id: peca.expositor_id ?? Number(peca.expositor?.id),
     // Adicione outros campos se necessário
   };
 
@@ -121,6 +121,7 @@ export const PecaCard: FC<PecaCardProps> = ({ peca }) => {
               try {
                 deletePeca.mutate();
               } catch (error) {
+                console.error("Erro ao remover peça:", error);
                 alert("Você não tem permissão para esta ação")
               }
             }}
@@ -137,8 +138,8 @@ export const PecaCard: FC<PecaCardProps> = ({ peca }) => {
 
       {/* Modal de edição */}
       {editMode && (
-        <CriarPeca 
-          //@ts-ignore
+        <CriarPeca
+          // @ts-expect-error expositor_id não está tipado em PecaSchema quando vem aninhado em expositor
           expositorId={pecaConvertida.expositor_id.toString()}
           pecaExistente={pecaConvertida}
           onClose={() => setEditMode(false)}

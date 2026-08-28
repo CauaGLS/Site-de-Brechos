@@ -51,14 +51,10 @@ export function CriarIngresso() {
     return `${numericValue.slice(0, 3)}.${numericValue.slice(3, 6)}.${numericValue.slice(6, 9)}-${numericValue.slice(9, 11)}`;
   };
 
-  const onSubmit = form.handleSubmit((data) => {
-    const cpfNumerico = data.cpf.replace(/\D/g, "");
-    mutation.mutate({ ...data, cpf: cpfNumerico });
-  });
-
    const mutation = useMutation({
     mutationFn: async (data: { nome: string; email: string; cpf: string }) => {
       setIsLoading(true);
+      setError(null);
       try {
         const response = await BrechoService.appApiCriarIngresso({
           requestBody: {
@@ -74,10 +70,12 @@ export function CriarIngresso() {
     },
     onSuccess: (data) => {
       setIngressoId(data.id);
+      setSuccess("Ingresso gerado com sucesso!");
       form.reset(); // Limpa os campos do formulário
     },
     onError: (error) => {
       console.error("Erro ao criar ingresso:", error);
+      setError(error instanceof Error ? error.message : "Erro ao criar ingresso");
     }
   });
 

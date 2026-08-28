@@ -93,6 +93,7 @@ export function CriarPeca({ expositorId, pecaExistente, onClose }: CriarPecaProp
     try{
       mutation.mutate(data);
     } catch (error) {
+      console.error("Erro ao salvar peça:", error);
       alert("Você não tem permissão para esta ação")
     }
   });

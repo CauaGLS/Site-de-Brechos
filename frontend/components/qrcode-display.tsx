@@ -2,12 +2,6 @@
 
 import { BrechoService } from "@/services";
 import { useQuery } from "@tanstack/react-query";
-import { Download } from "lucide-react";
-import { Button } from "./ui/button";
-
-interface QRCodeDisplayProps {
-  ingressoId: string;
-}
 
 export function QRCodeDisplay({ ingressoId }: { ingressoId: string }) {
   const { data: qrCode, isLoading, error } = useQuery({

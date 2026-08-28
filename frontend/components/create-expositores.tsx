@@ -136,10 +136,11 @@ export function CriarExpositor({
         await createMutation.mutateAsync(data);
       }
     } catch (error) {
+      console.error("Erro ao salvar expositor:", error);
       alert("Você não tem permissão para esta ação");
     }
   };
-  
+
 
   const isPending = createMutation.isPending || updateMutation.isPending;
 
@@ -163,6 +164,7 @@ export function CriarExpositor({
                 } 
               }
               catch (error) {
+                console.error("Erro ao excluir expositor:", error);
                 alert("Você não tem permissão para esta ação");
               }
               }}

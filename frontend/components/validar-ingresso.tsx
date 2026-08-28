@@ -48,8 +48,8 @@ export function ValidarIngresso() {
       setError(null);
       form.reset();
     },
-    onError: (error: any) => {
-      setError(error?.message || "Ocorreu um erro inesperado");
+    onError: (error: unknown) => {
+      setError(error instanceof Error ? error.message : "Ocorreu um erro inesperado");
       setSuccess(null);
     },
   });
