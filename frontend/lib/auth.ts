@@ -34,10 +34,12 @@ export const auth = betterAuth({
       // A coluna `admin` é NOT NULL sem default no banco (o default=False do Django
       // existe só em Python) e o better-auth insere direto via SQL. `input: false`
       // impede que o cliente se cadastre já como administrador.
+      // O default é uma função porque o better-auth ignora `defaultValue: false`
+      // (falsy) e deixaria o campo de fora do INSERT.
       admin: {
         type: "boolean",
         required: false,
-        defaultValue: false,
+        defaultValue: () => false,
         input: false,
       },
     },
