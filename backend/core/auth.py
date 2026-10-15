@@ -5,7 +5,9 @@ from ninja.security import HttpBearer
 
 class AuthBearer(HttpBearer):
     def authenticate(self, request, token):
-        session = Session.objects.select_related("user").get(token=token)
+        # .first() em vez de .get(): token inexistente deve resultar em 401, não em
+        # DoesNotExist (que virava erro 500).
+        session = Session.objects.select_related("user").filter(token=token).first()
 
         if not session:
             return None
