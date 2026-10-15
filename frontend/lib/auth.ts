@@ -13,6 +13,14 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
+  databaseHooks: {
+    user: {
+      create: {
+        // Todo usuário novo nasce sem privilégio de administrador.
+        before: async (user) => ({ data: { ...user, admin: false } }),
+      },
+    },
+  },
   // Plugins
   plugins: [oneTap()],
   // Database
@@ -33,13 +41,13 @@ export const auth = betterAuth({
     additionalFields: {
       // A coluna `admin` é NOT NULL sem default no banco (o default=False do Django
       // existe só em Python) e o better-auth insere direto via SQL. `input: false`
-      // impede que o cliente se cadastre já como administrador.
-      // O default é uma função porque o better-auth ignora `defaultValue: false`
-      // (falsy) e deixaria o campo de fora do INSERT.
+      // impede que o cliente se cadastre já como administrador. O valor inicial
+      // (false) é definido no hook `databaseHooks.user.create.before` abaixo, pois
+      // nesta versão do better-auth `defaultValue: false` é ignorado (falsy) e um
+      // default em função chega ao Kysely sem ser executado.
       admin: {
         type: "boolean",
         required: false,
-        defaultValue: () => false,
         input: false,
       },
     },
